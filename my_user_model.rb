@@ -1,10 +1,6 @@
-# SQLite is a C library that provides a lightweight, disk-based database.
-# sqlite3 gem is the sqlite database driver which facilites the integration of sqlite database with ruby applications 
-# sqlite3 gem provides SQLite3::Database class for database connection
 require 'sqlite3'
-
-# connection_pool gems provides the connectionpool class that manages the limited number of SQLite database conncetions
-require 'connection_pool'
+require 'connection_pool' 
+require 'logger'
 
 # defining a User class that provides an interface to interacts with sqlite database using basic CRUD operations on user records
 # It encapsulates the database operations within methods and uses a connection pool for efficient database connections.
@@ -16,7 +12,10 @@ class User
     # creates a connection pool("DATABASE_POOL") using the connectionpool gem. It ensures the max of 5 connections to the SQLite database specified by 'db.sql'
     DATABASE_POOL = ConnectionPool.new(size: MAXIMUM_CONNECTIONS, timeout: 5) do
         SQLite3::Database.new(DATABASE_FILE)
-    end
+    end 
+
+    LOG_fILE = 'My_user_model.log'
+    LOGGER = Logger.new(LOG_fILE)
 
     # Initializes a new instance of the User class and Sets the @db instance variable to the connection pool.
     # Calls the create_table private method to ensure that the 'users' table exists in the database.
@@ -47,14 +46,38 @@ class User
 
     # This method inserts the new record/user into the users table. The user_information parameter is a hash containing the new user informations 
     def create(user_information)
-        @db.with do |connection|
-            connection.execute(
-                "INSERT INTO users (firstname, lastname, age, password, email) VALUES (:firstname, :lastname, :age, :password, :email)",
-                user_information
-            )
-            connection.last_insert_row_id
-        end
-    end
+        begin 
+            # to check if the required fields are not empty 
+            validate_user_information(user_information)             
+
+            @db.with do |connection|
+                connection.execute(
+                    "INSERT INTO users (firstname, lastname, age, password, email) VALUES (:firstname, :lastname, :age, :password, :email)",
+                    user_information
+                ) 
+                # created_user as a hash with the required keys
+                created_user = {
+                    'id' => connection.last_insert_row_id, 
+                    'firstname' => user_information['firstname'],
+                    'lastname' => user_information['lastname'], 
+                    'age' => user_information['age'], 
+                    'email' => user_information['email']
+                }
+                # to return the created_user hash 
+                created_user
+            end 
+        # if any exception is raised in the begin block, the exception object with assigned to variable 'e'
+        rescue ArgumentError => e 
+            {error: e.message}
+        rescue SQLite3::Exception => e 
+            # calls a private method handle_database_error
+            handle_database_error(e, "Failed to create user. Please check your input")
+        rescue  StandardError => e 
+            # to handle any other standard errors which are not specified to SQLite. It prints a generic error message about th exception
+            LOGGER.error("An unexpected error occured: #{e.message}")
+            {error: "Unexpected error"}
+        end 
+    end 
 
     # retrieves the user information based on id. ".first" is used to retrieve only first matching record
     def find(user_id)
@@ -70,12 +93,12 @@ class User
         end 
     end 
 
-    # retrieve information for all users from the database
+    # retrieve information for all users from the database 
+    # public 
     def all
         @db.with do |connection|
             connection.results_as_hash = true
-            result = connection.execute("SELECT id, firstname, lastname, age, email FROM users")
-            puts result.inspect # adding this line for debugging
+            result = connection.execute("SELECT id, firstname, lastname, age, email FROM users") 
             result
         end 
     end 
@@ -96,7 +119,27 @@ class User
         @db.with do |connection|
             connection.execute("DELETE FROM users WHERE id = ?", [user_id])
         end 
-    end         
+    end 
+
+    
+    private 
+    
+    def validate_user_information(user_information) 
+        if user_information['firstname'].to_s.strip.empty? || user_information['lastname'].to_s.strip.empty? || user_information['email'].to_s.strip.empty? || user_information['password'].to_s.strip.empty?
+            raise ArgumentError, 'firstname, lastname, email and password are required'
+        end 
+    end  
+
+    def handle_database_error(exception, custom_message = nil) 
+        # to display custom message if provided, otherwise generic message
+        error_message = custom_message || "Database Interaction Error: #{exception.message}" 
+
+        # to log the error message 
+        LOGGER.error(error_message)
+
+        # to return an error hash with the error message 
+        {error: error_message}
+    end 
 
 end
         

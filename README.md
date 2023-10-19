@@ -11,7 +11,7 @@ c) indel.erb
 In this project we implement a very famous architecture: MVC (Model View Controller) in order to build an application called My Users APP.
 We create three files my_user_model.rb, app.rb and index.erb and their description are as follows:
 
-1) Model -- my_user_model.rb
+1. Model -- my_user_model.rb
 ********************
 In this file, we create a class User which is an interface in order to create user, find user, get all users, update user and destroy in sqlite database to manage user data.
 We use the gem sqlite3 and the sqlite filename will be named db.sql.
@@ -48,7 +48,7 @@ Removes the user from the users table.
 Additionally, the table creation logic is encapsulated in the create_table private method, ensuring that the required table structure is in place.
 
 **************************************************************************************************************************************
-2) Controller -- app.rb
+2. Controller -- app.rb
 
 In this file, we use the User class from the file my_user_model.rb.
 It contains multiple routes whic return JSON
@@ -91,7 +91,7 @@ Signs out the current user, destroys the user in the database, and returns nothi
 
 We use the session and cookies for signed-in method. We use saved cookies in order to perform curl request.
 ******************************************************************************************************************
-3) view -- index.erb
+3. view -- index.erb
 *********************
 We create a subdirectory views in which we create a file named index.erb which will be rendered in the route Get on /
 
@@ -100,12 +100,21 @@ Notes:
  we use port: 8080 to run the server locally
  We change the binding address to: 0.0.0.0 to access the applicaton from the browser 
 
-## Installation
-Install Puma Gem: 
-Puma is a web server often used with Sinatra applications
+## Installation 
+SQLite:
+SQLite is a C library that provides a lightweight, disk-based database.
+sqlite3 gem is the sqlite database driver which facilites the integration of sqlite database with ruby applications
+
+sinatra:
+sinatra - a lightweight web framework that simplifies the process of creating web applications and defining routes for handling http requests and generating responses.
+
+puma:
+puma - A web server for Ruby web applictions, often used with Sinatra applications
+json - JSON serialization/ deserialization library for Ruby.
 command *** - gem install Puma 
 
-Install connection_pool gem: 
+connection_pool: 
+connection_pool gems provides the connectionpool class that manages the limited number of SQLite database conncetions
 A mechanism for managing and reusing database connecitons. A connection pool is a cache of database connections that are created and kept open, ready to be reused.
 Instead of creating a new connection for each request, the application borrows a connection from the pool and returns it when done.
 command *** - gem install connection_pool
@@ -119,7 +128,7 @@ curl command for making a HTTP Post request on /users: ***
 1- Params data
  curl -X POST -i https://web-w23a9762c-19b3.docode.us.qwasar.io/users -d "firstname=Neema" -d "lastname=Shrestha" -d "age=16" -d "password=neema16" -d "email=neema@example.com"
 **************************************************************************************
-2- JSON data
+2- JSON request payload (Optional case)
 # Define the URL
 url="https://web-w23a9762c-19b3.docode.us.qwasar.io/users" 
 # Define the request body as a JSON object
@@ -141,13 +150,16 @@ echo "$response"
 curl -X POST -i https://web-w23a9762c-19b3.docode.us.qwasar.io/sign_in -d "password=neema16" -d "email=neema@example.com"
 
 # curl put request on /users route:
-curl -X PUT -i https://web-w23a9762c-19b3.docode.us.qwasar.io/users -H "Cookie: rack.session=rdySYqdWgXK4H2jB57kj9MwMOBPcUjDuL7D8qBdGBi7zZRjJTx5WR602gHi%2Fg%2B5wYFr0g1qNI4IQqFBykrIG0tc4CunSCjBtEs5uhk92y079ou6l7eakGGLINOmbR7sewhjEpGOplF6ZPqgwwc%2FKWr2VUDTm%2BJyDqwxGZlC%2FaGi0%2BzS21wndpmuJkPMq%2Bn%2BKWW7gpAKPteTjpyUl4thMzmmrcq9EZ3nCef1MuaCZaSsLZgUhzuhQDrOGGaecciVUIPylt6C79%2FyFeoEEzTQvkmcKmEYy8DLrgFOVBSaNHg%3D%3D--p%2FhkA9TVmUmvM9DV--h4pyEIfouY3CLevXU%2Fx3Fw%3D%3D; path=/; HttpOnly" -d "new_password=naina19"
+curl -X PUT -i https://web-w23a9762c-19b3.docode.us.qwasar.io/users -H "Cookie: rack.session=rdySYqdWgXK4H2jB57kj9MwMOBPcUjDuL7D8qBdGBi7zZRjJTx5WR602gHi%2Fg%2B5wYFr0g1qNI4IQqFBykrIG0tc4CunSCjBtEs5uhk92y079ou6l7eakGGLINOmbR7sewhjEpGOplF6ZPqgwwc%2FKWr2VUDTm%2BJyDqwxGZlC%2FaGi0%2BzS21wndpmuJkPMq%2Bn%2BKWW7gpAKPteTjpyUl4thMzmmrcq9EZ3nCef1MuaCZaSsLZgUhzuhQDrOGGaecciVUIPylt6C79%2FyFeoEEzTQvkmcKmEYy8DLrgFOVBSaNHg%3D%3D--p%2FhkA9TVmUmvM9DV--h4pyEIfouY3CLevXU%2Fx3Fw%3D%3D; path=/; HttpOnly" -d "new_password=naina19" 
+
+# curl put request to route put '/update_firstname' 
+curl -X PUT -i https://web-w23a9762c-19b3.docode.us.qwasar.io/update_firstname -H "Cookie: rack.session=luvX5h7Q3rottcMb06iNWzUNr8T6k8JZj8zWciMC4lW%2FytnvSQ4vaRFDylQOVhgGDrgwA%2BhRKHmse70uxRNla6ToL4B3SoE4dL6wbgplRV0EpK86C80ABeryaD9ldJr%2FDCrs2OXcKbbD2hhvXNXclMweS5pSq0kQ8VtV8PRwMIZfVXBPPw8Q20Y4%2BAID2NCsw%2FKK4Ssc6erUATncp9TKYaHplT4uHykjnU1UFsfri7q6%2BiM6r%2FVpekv4Da0Sapw2jsFVwXG2K5KBOn%2B1Z4l5LQK6V1kS9DlfRxo2XWqBVw%3D%3D--aVLP3zw8KBd0hFhE--D2vhI1BaQaxwMzxPAZdhIA%3D%3D; path=/; HttpOnly" -d "new_firstname=Bikash" 
 
 # curl DELETE request to the /sign_out route
 curl -X DELETE -i https://web-w23a9762c-19b3.docode.us.qwasar.io/sign_out -H "Cookie: rack.session=D%2FsvUb%2B69mIWlwAlLHdt5BUZUoulcG51RTvaeHQ74a4PVjWzYlcJLur2e8OAuGEJL%2FxfDxfPRnTdlO0%2FqbFJXnwhi89%2BLbANbHwUQqrYfKHEQPR7rgzqpLdb1tKdP38avJIJqjga1sEmp%2BbREadqwRQknCEz8F1EIFgx7o20RTSQR8XCdHrhnNdR4cyVXBRYk%2FbThg3Q5wst2UohRyMjZ6CkI1W5Mkr6CmY30DVYrpRKtTKYZdDbcLh98qv82LxpZ7Ap93UpYq1Uts%2FdEZQNoB4vfVViQDFltlRQ9%2BpxaA%3D%3D--AQSYsDVnAwgjEuv1--hGS5xLSYrZ9GsGU3dE%2BMjg%3D%3D; path=/; HttpOnly"
 
 # curl command to simulate a DELETE request to the /users route
-curl -X DELETE -H "Cookie: session=5" https://web-w23a9762c-19b3.docode.us.qwasar.io/users 
+curl -X DELETE -i https://web-w23a9762c-19b3.docode.us.qwasar.io/users -H "Cookie: rack.session=Y50AIPN6qA23d51LkX6oT9GsqKdlCh4m6oJ2gHOSFNbQjae67fOWM5doOQmCjb7doz%2BCIKA7uJ5%2BjGeCzbR0ltq2RYsP5Piy5TpGzeJBvRyaUuUWQwYgr71E%2BnXpap%2FcR%2Bs2dzEvSkO0qd7Q260M4LmYfz3%2FaX6Hd1I1AufHLRNh8K%2FgXSE2OBw1ul%2FArnqQMd5ZsyZssd9KDBg8y19RkA%2F2cZlSD1tvUzVicaxE7xeztS1VNFvkf3NOWqG0bU72Z6wHrK%2FYOz1W8sHsWX5vrGrJsYbzCISp2KFvXhJgnA%3D%3D--vKP62nYIhOEX2li5--bHn3O%2FhZ74dZrI4JsuaOsQ%3D%3D; path=/; HttpOnly"
 
 
 

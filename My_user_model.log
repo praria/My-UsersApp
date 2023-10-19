@@ -1,0 +1,4 @@
+# Logfile created on 2023-10-18 17:05:08 +0000 by logger.rb/v1.5.0
+E, [2023-10-18T18:38:15.954008 #5697] ERROR -- : Error while creating user: no such bind parameter
+E, [2023-10-18T18:43:24.833074 #5697] ERROR -- : Error while creating user: no such bind parameter
+E, [2023-10-18T23:47:36.149944 #3448] ERROR -- : An unexpected error occured: Firstname is required
