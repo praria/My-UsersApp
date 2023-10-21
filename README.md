@@ -2,14 +2,14 @@
 ***
 
 ## Task
-To implement a famous architecture MVC (Model View Controller) by creating the following three files:
+To build an application "My Users App" by implementing a famous architecture MVC (Model View Controller). We need to create the following three files:
 a) my_user_model.rb
 b) app.rb
 c) indel.erb
 
 ## Description
-In this project we implement a very famous architecture: MVC (Model View Controller) in order to build an application called My Users APP.
-We create three files my_user_model.rb, app.rb and index.erb and their description are as follows:
+In this project we implement a very famous architecture: MVC (Model View Controller) in order to build to build this application.
+The description of the three files my_user_model.rb, app.rb and index.erb are as follows:
 
 1. Model -- my_user_model.rb
 ********************
@@ -118,6 +118,9 @@ connection_pool gems provides the connectionpool class that manages the limited 
 A mechanism for managing and reusing database connecitons. A connection pool is a cache of database connections that are created and kept open, ready to be reused.
 Instead of creating a new connection for each request, the application borrows a connection from the pool and returns it when done.
 command *** - gem install connection_pool
+
+Logger: 
+Logger is implemented in the application for debugging, monitoring and gaining insights into the application's behavior
 
 ## Usage
 

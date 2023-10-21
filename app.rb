@@ -3,7 +3,7 @@ require 'puma'
 require 'json' # to load the 'JSON' module
 require_relative 'my_user_model'
 
-# enables session support. Sessions are used to store data between request 
+# enables session support to store data between request 
 enable :sessions
 
 # creates an instance of the User class defined in the my_user_model file
@@ -37,10 +37,11 @@ end
 
 
 
-# This route reads and parses the params data/ JSON data from the request body, uses that data to create a new user in the database
-# using the user_model, and then returns the newly created user (including the generated ID) as a JSON response to the client
+# when a POST request is sent to the '/users' route, this route reads and parses the data/ JSON data from the request body, 
+# uses that data to create a new user in the database using the user_model, and then returns the
+# newly created user (including the generated ID) as a JSON response to the client
 post '/users' do 
-    # user_information = JSON.parse(request.body.read)   
+    # user_information = JSON.parse(request.body.read)   # JSON Payload
     user_information = params
     created_user = user_model.create(user_information) 
     if created_user.is_a?(Hash) && created_user.key?('id') && created_user.key?('firstname') && created_user.key?('lastname') && created_user.key?('email')  
@@ -51,9 +52,11 @@ post '/users' do
     end 
 end
 
-# This route authenticates a user based on provided credentials, sets a session variable if successful, and returns the user data (exclusind password field)
+# defining a route that listens for HTTP POST requests at the '/sign_in' URL path
+# This route authenticates a user based on provided credentials, sets a session variable if successful, and returns the user data (exclusind password field) in JSON format
+
 post '/sign_in' do
-    # user_information = JSON.parse(request.body.read)
+    # user_information = JSON.parse(request.body.read) # JSON payload
     user_information = params
     # to validate input
     if user_information['email'].to_s.empty? || user_information['password'].to_s.empty?
